@@ -760,10 +760,10 @@
     </style>
     @include('layouts.header')
     <!-- Intro -->
-    <div id="intro" class="basic-1" style="background-color: white;">
+    <div id="intro" class="basic-1" style="height: 900px; background-color: white;">
         
     <form action="">
-  <div class="row bg-white date-time-location" style="margin-left: auto; margin-right: auto; width: 70vw; background: linear-gradient(45deg, #e9d101, #f88018e6)">
+  <div class="row bg-white date-time-location" style="margin: 0 auto; width: 70vw; background: linear-gradient(45deg, #e9d101, #f88018e6); margin-bottom: 100px">
     <div class="col-sm-12 col-lg-4 d-flex align-items-center justify-content-center">
       <div class="form-group bg-white rounded">
         <label for="location" style="font-size: 1.5rem; text-align: left;">
@@ -777,7 +777,7 @@
         <label for="dates" style="font-size: 1.5rem; text-align: left;">
           Dates <i class="fa fa-calendar position-absolute" style="right: 30px;"></i>
         </label>
-        <input type="text" class="form-control" id="dates" placeholder="Select date range" style="font-size: 1.2rem;">
+        <input type="text" class="form-control" id="dates" name="dates" placeholder="Select date range" style="font-size: 1.2rem;">
       </div>
     </div>
     <div class="col-sm-12 col-lg-3 d-flex align-items-center justify-content-center">
@@ -785,17 +785,30 @@
         <label for="times" style="font-size: 1.5rem; text-align: left;">
           Times <i class="fa fa-clock position-absolute" style="right: 30px;"></i>
         </label>
-        <input type="text" class="form-control" id="times" placeholder="Select time range" style="font-size: 1.2rem;">
+        <input type="text" class="form-control" id="times" name="times" placeholder="Select time range" style="font-size: 1.2rem;">
       </div>
     </div>
     <div class="col-sm-12 col-lg-2 d-flex align-items-center justify-content-center">
-      <button class="btn btn-success btn-block" style="font-size: 1.2rem;">Submit</button>
+      <button type="submit" class="btn btn-success btn-block" style="font-size: 1.2rem;">Submit</button>
     </div>
   </div>
 </form>
 
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" defer></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300">
+
+<style>
+.daterangepicker td {
+    font-size: 16px !important; /* change the value to the desired font size */
+}
+
+.daterangepicker .calendar-time input[type="text"] {
+  font-size: 16px !important; /* replace with your desired font size */
+}
+
+  </style>
 
 <script>
 $(function() {
@@ -808,18 +821,34 @@ $(function() {
   }, function(start, end, label) {
     console.log("A date range was chosen: " + start.format('MM/DD/YYYY') + ' to ' + end.format('MM/DD/YYYY'));
   });
-  
+
   $('#times').daterangepicker({
-    opens: 'left',
-    timePicker: true,
-    timePicker24Hour: true,
-    timePickerIncrement: 30,
-    locale: {
-      format: 'hh:mm A'
-    }
-  }, function(start, end, label) {
-    console.log("A time range was chosen: " + start.format('hh:mm A') + ' to ' + end.format('hh:mm A'));
-  });
+  opens: 'left',
+  timePicker: true,
+  timePicker24Hour: true,
+  timePickerIncrement: 30,
+  startDate: moment().startOf('day'),
+  endDate: moment().startOf('day').add(1, 'day'),
+  minDate: moment().startOf('day'),
+  minTime: '00:00:00', // allow selecting a time before the first time in the range
+  maxTime: '23:59:59',
+  locale: {
+    format: 'hh:mm A'
+  }
+}, function(start, end, label) {
+  console.log("A time range was chosen: " + start.format('hh:mm A') + ' to ' + end.format('hh:mm A'));
+});
+
+$('#times').on('show.daterangepicker', function (ev, picker) {
+  picker.container.find(".calendar-table").hide();
+  picker.container.find(".ranges").hide();
+  picker.container.find(".timepicker").show();
+  picker.container.find(".timepicker span").css('font-size', '20px'); // change font size here
+});
+
+$('#times').on('apply.daterangepicker', function (ev, picker) {
+  console.log("A time range was chosen: " + picker.startDate.format('hh:mm A') + ' to ' + picker.endDate.format('hh:mm A'));
+});
 });
 </script>
 
@@ -934,7 +963,7 @@ $(function() {
 
 
 
-<div style="height:100px; width:100%; background-color: #EFEFEF"></div>
+<div style="height:90px; width:100%; background-color: #EFEFEF"></div>
 
 
 
